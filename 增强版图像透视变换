@@ -1,0 +1,82 @@
+import cv2 as cv
+"""
+`cv.EVENT_LBUTTONDOWN`是OpenCV中的一个鼠标事件类型，表示鼠标左键按下事件。您可以使用这个事件类型来响应鼠标左键按下的操作。
+
+下面是一个示例代码，演示了如何使用`cv.EVENT_LBUTTONDOWN`事件来实时显示鼠标左键按下时的坐标：
+
+```python
+import cv2
+
+def mouse_callback(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print(f"Mouse clicked at ({x}, {y})")
+
+image = cv2.imread("image.jpg")  # 替换为您的图像文件路径
+
+cv2.namedWindow("Image")
+cv2.setMouseCallback("Image", mouse_callback)
+
+while True:
+    cv2.imshow("Image", image)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):  # 按下 'q' 键退出循环
+        break
+
+cv2.destroyAllWindows()
+```
+
+在这个示例代码中，我们使用`cv2.setMouseCallback`函数来设置鼠标回调函数`mouse_callback`。当鼠标事件发生时，OpenCV会调用这个回调函数，并传递相应的参数，包括事件类型、鼠标坐标等。在`mouse_callback`函数中，我们检查事件类型是否为`cv2.EVENT_LBUTTONDOWN`，如果是，则打印鼠标坐标。
+
+请注意，这只是一个示例代码，您可以根据您的具体需求进行适当的修改。例如，您可以在`mouse_callback`函数中添加更多的逻辑来处理鼠标左键按下事件，比如在图像上绘制坐标信息等。
+"""
+
+
+import numpy as np
+
+
+circles=np.zeros((4,2),dtype=int)
+count=0
+print(circles)
+def mouse_callback(event, x, y, flags, param):
+    global  count
+    if event == cv.EVENT_LBUTTONDOWN:
+        circles[count]=x,y
+        count+=1
+    print(circles)
+
+
+image = cv.imread("../image/prespective.png")  # 替换为您的图像文件路径
+
+#
+while True:
+# # print(co)
+    if count==4:
+#
+        plts=np.float32(circles)
+        height=110
+        weight=81
+        plts2=np.float32([[0,height],[weight,height],[weight,0],[0,0],])
+        reotation=cv.getPerspectiveTransform(plts,plts2)
+        #进行透视变换投影
+        iimg_warp=cv.warpPerspective(image,reotation,(weight,height))
+        dst=cv.flip(iimg_warp,1)
+        cv.imshow('d',image)
+
+        cv.namedWindow('kl', cv.WINDOW_NORMAL)
+
+        cv.imshow('kl',iimg_warp) # print(plts)
+    for i in range(0,4) :
+         cv.circle(image,(circles[i][0],circles[i][1]),5,(0,0,255),cv.FILLED)#绘制填充的圆
+# #         # #计算透视变换矩阵
+#
+
+    # cv.imshow("Image", image)
+    cv.namedWindow("Image",cv.WINDOW_NORMAL)
+    coordinate = cv.setMouseCallback("Image", mouse_callback)
+    cv.imshow('Image',image)
+
+    if cv.waitKey(1) & 0xFF == ord('q'):  # 按下 'q' 键退出循环
+            break
+
+
+cv.destroyAllWindows()
