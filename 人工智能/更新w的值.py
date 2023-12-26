@@ -1,3 +1,5 @@
+通过损失函数的迭代对w求导，确立最小损失函数，以求的最佳的w
+
 import tensorflow as tf
 
 w = tf.Variable(tf.constant(5, dtype=tf.float32))#指定生成训练参数
